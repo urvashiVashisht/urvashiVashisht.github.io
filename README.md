@@ -35,3 +35,14 @@ Here are some of the key technologies I work with:
 * **Resume:** [Link to a PDF of your resume here]
 * **LinkedIn:** [Your LinkedIn Profile URL]
 * **Email:** [your.email@example.com]
+
+
+```java
+// This is the formatted, copyable code block
+public class User {
+    private String name;
+    private String job;
+
+    // Getters and setters would go here
+}
+```
