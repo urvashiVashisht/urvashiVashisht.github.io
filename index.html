@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urvashi Vashisht - QA Engineer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevents scrollbars from the canvas */
+            background-color: #000;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* Canvas Styling */
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Sits behind the content */
+        }
+
+        /* Content Styling */
+        .content-container {
+            position: relative;
+            z-index: 2; /* Sits on top of the canvas */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #fff;
+            text-align: center;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay to ensure text is readable */
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #0f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 1.5px;
+        }
+        
+        /* You can add a simple button or link for navigation */
+        .cta-button {
+            margin-top: 40px;
+            padding: 15px 30px;
+            border: 1px solid #0f0;
+            color: #0f0;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px #0f0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- The canvas element for our animation -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- The main content that sits on top of the animation -->
+    <div class="content-container">
+        <h1 class="title">Urvashi Vashisht</h1>
+        <p class="subtitle">Quality Assurance Engineer</p>
+        <!-- This button can link to your projects/blog section later -->
+        <a href="#projects" class="cta-button">View My Work</a>
+    </div>
+
+    <script>
+        // Get the canvas and its 2D rendering context
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas dimensions to fill the screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // The characters that will be part of the "digital rain"
+        // Using Katakana, a common choice for the Matrix effect
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        // Calculate the number of columns based on canvas width and font size
+        const columns = Math.floor(canvas.width / fontSize);
+
+        // Create an array to track the y-position of each column's raindrop
+        const rainDrops = [];
+        for (let i = 0; i < columns; i++) {
+            rainDrops[i] = 1;
+        }
+
+        // The main animation loop
+        function draw() {
+            // Create a semi-transparent black rectangle to cover the canvas.
+            // This creates the fading trail effect for the characters.
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Set the color and font for the falling characters
+            ctx.fillStyle = '#0F0'; // A bright green
+            ctx.font = fontSize + 'px monospace';
+
+            // Loop through each column
+            for (let i = 0; i < rainDrops.length; i++) {
+                // Get a random character from our alphabet string
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                
+                // Draw the character at the current x and y position
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                // Check if the raindrop has gone off the screen
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    // If it has, reset its y-position back to the top
+                    rainDrops[i] = 0;
+                }
+
+                // Increment the y-position to make the character fall
+                rainDrops[i]++;
+            }
+        }
+
+        // Start the animation by calling the draw function every 30 milliseconds
+        setInterval(draw, 30);
+
+        // Add a resize event listener to make the canvas responsive
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Recalculate columns on resize
+            const newColumns = Math.floor(canvas.width / fontSize);
+            // This part is a simplified reset. For a perfect resize, you might need more complex logic.
+            while(rainDrops.length < newColumns) rainDrops.push(1);
+            while(rainDrops.length > newColumns) rainDrops.pop();
+        });
+
+    </script>
+
+</body>
+</html>
